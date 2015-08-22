@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>Create Set</title>
+    <link rel="stylesheet" href="bootstrap/css/bootstrap.css">
+    <style>
+        .zeroMargin{
+            padding: 5px;
+            margin: 0px;
+        }
+        .border{
+            border: 1px solid #000000;
+        }
+    </style>
+    <script src="//code.jquery.com/jquery-1.10.2.js"></script>
+    <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+    <script src="dnd_js/resizePatch.js"></script>
+    <script src="dnd_js/jquery.ui.rotatable.js"></script>
+    <script src="dnd_js/dragDrop.js" ></script>
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+    <link rel="stylesheet" href="dnd_css/jquery.ui.rotatable.css">
+    <link rel="stylesheet" href="dnd_css/dragDrop.css">
+</head>
+<body>
+<div id="main" class="container">
+    <div class="row zeroMargin">
+        PiCtoRy
+    </div>
+    <div class="row">
+        <div class="col-md-6 zeroMargin border">
+            <div id="products" style="height: 30em">
+                    <div  class="drag" style="">
+                        <img class="img" height="50" width="50" src="images/icon.png"/>
+                    </div>
+                    <div  class="drag">
+                        <img class="img" height="50" width="50" src="images/bra.png"/>
+                    </div>
+            </div>
+        </div>
+        <div class="col-md-6 zeroMargin border">
+            <div id="droppable" style="height: 30em">
+                <div class="toolsTop" id="tools">
+                    <input id="toolId" type="hidden" value="hello">
+                    <button id="flip" >Flip</button>
+                    <button id="remove" >Remove</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

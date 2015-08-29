@@ -18,6 +18,7 @@
     <script src="dnd_js/resizePatch.js"></script>
     <script src="dnd_js/jquery.ui.rotatable.js"></script>
     <script src="dnd_js/dragDrop.js" ></script>
+    <!--<script src="dnd_js/dragDrop.js" ></script>-->
     <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
     <link rel="stylesheet" href="dnd_css/jquery.ui.rotatable.css">
     <link rel="stylesheet" href="dnd_css/dragDrop.css">
@@ -30,10 +31,10 @@
     <div class="row">
         <div class="col-md-6 zeroMargin border">
             <div id="products" style="height: 30em">
-                    <div  class="drag" style="">
+                    <div  id="drag1" class="drag" style="">
                         <img class="img" height="50" width="50" src="images/icon.png"/>
                     </div>
-                    <div  class="drag">
+                    <div  id="drag2" class="drag">
                         <img class="img" height="50" width="50" src="images/bra.png"/>
                     </div>
             </div>
@@ -41,13 +42,20 @@
         <div class="col-md-6 zeroMargin border">
             <div id="droppable" style="height: 30em">
                 <div class="toolsTop" id="tools">
-                    <input id="toolId" type="hidden" value="hello">
                     <button id="flip" >Flip</button>
                     <button id="remove" >Remove</button>
                 </div>
             </div>
         </div>
     </div>
+	<button id="publish">publish</button>
+    <div id="droppable1" class="zeroMargin border" style="height: 30em">
+        <div class="toolsTop" id="tools1">
+            <input id="toolId1" type="hidden" value="hello">
+            <button id="flip1" >Flip</button>
+            <button id="remove1" >Remove</button>
+        </div>
+        </div>
 </div>
 </body>
 </html>

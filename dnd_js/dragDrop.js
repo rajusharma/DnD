@@ -1,98 +1,152 @@
+/**
+ * Created by rajesh.sharma on 2015/08/26.
+ */
 $(document).ready(function () {
-    //map for storing info of dragged items
-    var mapForUniqueElement = new Object();
-    var mapForSameElement = new Object();
-    var x = null;
-    //Make element draggable
+    //Make new elements draggable
     $(".drag").draggable({
-        helper: 'clone',
+        helper:"clone",
         cursor: 'move',
         tolerance: 'fit',
         stack: '.drag',
-        revert: "invalid",
-        addClasses: false
+        revert: "invalid"
     });
-    $("#droppable").droppable({
-        drop: function (e, ui) {
-            var idOfDrag = $(ui.draggable)[0].id.split('-');
-            if (mapForUniqueElement[idOfDrag[0]] != 1 && idOfDrag.length==1) {
-                mapForUniqueElement[idOfDrag[0]]=1;
-                //clone the element
-                x = ui.helper.clone();
-                var pos = ui.offset;
-                /*Add a number to id so that if same element is dragged
-                 it can be differentiated using this number
-                 */
-                var id = idOfDrag[0]+"-"+"1".toString();
-                //set the map with number of same element in droppable area
-                //initially it will be set to 1 when a new element is dragged
-                mapForSameElement[idOfDrag[0]]=1;
-                x.attr('id',id);
-                //remove the cloned element
-                ui.helper.remove();
-                x.draggable({
-                    helper: 'original',
-                    containment: '#droppable',
-                    tolerance: 'fit',
-                    stack: '.drag',
-                    addClasses: false
-                }).rotatable();
-                x.resizable({
-                });
-                x.css({left:"0px",top:"0px"});
-                x.appendTo('#droppable');
-            }else if(mapForUniqueElement[idOfDrag[0]] == 1 && idOfDrag.length==1){
-                x = ui.helper.clone();
-                var pos = ui.offset;
-                //increment the mapForSameElement by one
-                mapForSameElement[idOfDrag]+=1;
-                //add the number of same element to id
-                var id = idOfDrag[0]+"-"+mapForSameElement[idOfDrag[0]].toString();
-                x.attr('id',id);
-                ui.helper.remove();
-                x.draggable({
-                    helper: 'original',
-                    containment: '#droppable',
-                    tolerance: 'fit',
-                    stack: '.drag',
-                    addClasses: false
-                }).rotatable();
-                x.resizable({
-                });
-                x.css({left:"0px",top:"0px"});
-                x.appendTo('#droppable');
+    $( "#droppable" ).droppable({
+        accept : ".drag",
+        drop:function (e, ui) {
+            x = ui.helper.clone();
+            var pos = ui.position;
+            //deduct the size of left panel if dragged div goes outside
+            if(pos.left>=$("#products").width()){
+                pos.left-=$("#products").width();
             }
+            if(pos.top>=$("#products").height()){
+                pos.top-=$("#products").height();
+            }
+            ui.helper.remove();
+            x.draggable({
+                helper: 'original',
+                containment: '#droppable',
+                tolerance: 'fit',
+                stack: '.drag'
+            }).rotatable();
+            x.resizable({
+            });
+            x.removeClass("drag");
+            x.addClass("dragged");
+            x.css({left:pos.left,top:pos.top});
+            x.appendTo('#droppable');
+            //hide the handlers
+            $("#droppable").find(".ui-resizable-handle").hide();
+            $("#droppable").find(".ui-rotatable-handle").hide();
+            $("#tools").hide();
         }
     });
+
 });
 $(document).click(function(e) {
-    //first hide all functions
-    $("#droppable").find(".ui-resizable-handle").hide();
-    $("#tools").hide();
-    $("#droppable").find(".ui-rotatable-handle").hide();
 
     // matches all children of droppable, change selector as needed
-    if( $(e.target).closest(".drag").length > 0 ) {
-        $(e.target).closest(".drag").find(".ui-resizable-handle").show();
+    if( $(e.target).closest(".dragged").length > 0 ) {
+        //hide other handlers
+        $("#droppable, #droppable1").find(".ui-resizable-handle").hide();
+        $("#droppable, #droppable1").find(".ui-rotatable-handle").hide();
+        //remove the id of last active item
+        $("#activeItem").removeAttr("id");
+        $(e.target).closest(".dragged").find(".ui-resizable-handle").show();
         $("#tools").show();
-        $(e.target).closest(".drag").find(".ui-rotatable-handle").show();
-        $('#toolId').val(e.target.parentNode.id);
+        $(e.target).closest(".dragged").find(".ui-rotatable-handle").show();
+        //set the id of active element
+        $(e.target).closest(".dragged").attr("id","activeItem");
     }
     else {
-        $("#droppable").find(".ui-resizable-handle").hide();
+        //hide the handlers
+        $("#droppable, #droppable1").find(".ui-resizable-handle").hide();
         $("#tools").hide();
-        $("#droppable").find(".ui-rotatable-handle").hide();
+        $("#droppable, #droppable1").find(".ui-rotatable-handle").hide();
+        $("#activeItem").removeAttr("id");
     }
 });
 
 
 $(function(){
-    $('#flip').click(function(e){
-        $("#"+$("#toolId")).toggleClass('flip');
+    $('#remove').click(function(e){
+        $("#activeItem").remove();
     });
 });
-$(function(){
-    $('#remove').click(function(e){
-        $("#"+$("#toolId").val()).remove();
+
+
+$(function() {
+    var setJson = {data: {}};
+    $("#publish").on("click", function () {
+        $("#droppable .dragged").each(function (containerKey,containerValue) {
+            var elements = {},subElements = {};
+            elements["class"] = containerValue.className;
+            elements["id"] = containerValue.id;
+            elements["style"] = containerValue.style;
+            elements["subelements"] = {};
+
+            //traverse all children of the draggable div
+            $(this).children().each(function (key, value) {
+                switch (key) {
+                    case 0:
+                        var itemImage = {};
+                        itemImage["class"] = value.className;
+                        itemImage["src"] = value.src;
+                        itemImage["height"] = value.height;
+                        itemImage["width"] = value.width;
+
+                        //add the image element to jsonData
+                        elements["subelements"][key] = itemImage;
+                        break;
+                    default:
+                        var handlers = {};
+                        handlers["class"] = value.className;
+                        handlers["style"] = value.style;
+                        //add handlers to jsonData
+                        elements["subelements"][key] = handlers;
+                }
+            });
+
+
+            //add whole drag div to jsonData
+            setJson.data[containerKey] = elements;
+
+        });
+        console.log(setJson);
+        publishCollection(setJson)
     });
+    function publishCollection(jsonData){
+
+        var data = jsonData.data;
+        for (collectionCount in data) {
+            var collection = '<div id="'+ data[collectionCount].id+'"'
+                +' class="'+ data[collectionCount].class+'"'
+                +' style="'+ data[collectionCount].style.cssText+'"'
+                +'>';
+            var collectionElements = data[collectionCount].subelements;
+            for ( subelements in  collectionElements) {
+                if (subelements == 0) {
+                    collection += '<img src="'+ collectionElements[subelements].src+'"'
+                        +' height="'+ collectionElements[subelements].height+'"'
+                        +' width="'+ collectionElements[subelements].width+'"'
+                        +' class="'+ collectionElements[subelements].class+'"'
+                        +'>';
+
+                }// else {
+                //    collection += '<div class="'+ collectionElements[subelements].class+'"'
+                //        +' style="'+ collectionElements[subelements].style.cssText+'"></div>';
+                //}
+            }
+            collection+='</div>';
+            console.log(collection);
+            $("#droppable1").append(collection);
+            $("#droppable1 .dragged").draggable({
+                helper: 'original',
+                containment: '#droppable1',
+                tolerance: 'fit',
+                stack: '.drag'
+            }).rotatable().resizable({});
+        }
+
+    }
 });

@@ -68,9 +68,26 @@ $(document).click(function(e) {
 });
 
 
-$(function(){
-    $('#remove').click(function(e){
+$(function() {
+    $('#remove').click(function (e) {
         $("#activeItem").remove();
+    });
+    $('#backward').click(function (e) {
+        $("#activeItem").css("z-index", 1);
+    });
+    $('#forward').click(function (e) {
+        $("#activeItem").css("z-index", 10);
+    });
+    //create the slider
+    $('#slider').slider({
+        value: 100,
+        min: 0,
+        max: 100
+    });
+    //every time the slider moves change the photo's opacity (in 0 seconds)
+    $('#slider').bind('slide', function () {
+        //divide slider's value by 100, because opacity can be 0 to 1
+        $("#activeItem").fadeTo(0, $(this).slider('value') / 100);
     });
 });
 

@@ -42,8 +42,17 @@
         <div class="col-md-6 zeroMargin border">
             <div id="droppable" style="height: 30em">
                 <div class="toolsTop" id="tools">
-                    <button id="flip" >Flip</button>
-                    <button id="remove" >Remove</button>
+                    <input id="toolId" type="hidden" value="hello">
+                    <div >
+                        <a>Opacity</a>
+                        <div id="slider">
+                            <div class="clear"></div>
+                            <a href="#" style="left: 100%;"></a></div>
+                    </div>
+                    <div class="clear"></div>
+                    <button id="remove" class=" btn  btn-small" type="button" data-placement="bottom" rel="tooltip" data-original-title="Remove"><i class="icon-trash ">&nbsp;Remove</i></button>
+                    <button id="backward" class=" btn  btn-small " type="button" data-placement="bottom" rel="tooltip" data-original-title="Backward"><i class="icon-arrow-down ">&nbsp;Send Back</i></button>
+                    <button id="forward" class=" btn  btn-small " type="button" data-placement="bottom" rel="tooltip" data-original-title="Forward"><i class="icon-arrow-up">&nbsp;Bring to Front</i></button>
                 </div>
             </div>
         </div>
